@@ -1,0 +1,213 @@
+# Queen vs Worker Brain Comparison Pipeline
+#
+# DAG:
+#   [queen aligned_clustered] + [worker aligned_clustered]
+#       → combine → cluster ─┬→ differential
+#                            └→ tangram (needs out_tag)
+#                               tangram_loocv (needs out_tag)
+#
+# The default target writes nothing under results/. Tangram runs need an
+# explicit, new out_tag and write results/tangram/combined_clustered_<tag>_*:
+#   snakemake --profile ../../config/profiles/slurm --config out_tag=g2_R2_s43 tangram_seed=43
+# (no out_tag, or the canonical g2_R2_s42, is refused). Run them by target or
+# with `--config out_tag=...`, which adds them to `all`.
+#
+# Rerun triggers: config/profiles/{local,slurm} set `rerun-triggers: mtime`,
+# so an edited shell line (e.g. the cluster resolution) or a changed param does
+# not schedule a rebuild of the canonical data/combined_clustered.h5ad. Without
+# a profile, pass `--rerun-triggers mtime` yourself.
+#
+# Usage:
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/slurm    # SLURM production
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/local     # Local testing
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake -n --profile ../../config/profiles/slurm  # Dry run
+
+import yaml
+from pathlib import Path
+
+configfile: "config.yaml"
+
+_defaults_path = Path(workflow.basedir) / "../../config/snakemake_defaults.yaml"
+if _defaults_path.exists():
+    with open(_defaults_path) as f:
+        _defaults = yaml.safe_load(f)
+    _merged = {**_defaults, **config}
+    config.update(_merged)
+
+shell.prefix("export PATH=$HOME/.local/bin:$PATH UV_LINK_MODE=copy HDF5_USE_FILE_LOCKING=FALSE && ")
+
+WORKDIR = str(Path(workflow.basedir).resolve())
+DATA_DIR = f"{WORKDIR}/data"
+PROJECT_ROOT = str(Path(workflow.basedir).resolve().parents[1])
+RESULTS_DIR = f"{PROJECT_ROOT}/results"
+QUEEN_DIR = config["queen_dir"]
+WORKER_DIR = config["worker_dir"]
+SNRNA_REF = config["snrna_ref"]
+CLUSTER_LABEL = config["cluster_label"]
+
+# Tangram output tag. Required for any Tangram rule: the untagged basename
+# (results/tangram/combined_clustered_tangram.h5ad) names an object whose
+# cell-type columns are keyed by position; writing it would re-arm every read of
+# that path. tangram_mapping.py names its outputs
+# combined_clustered_{tag}_{tangram,imputed}.h5ad.
+CANONICAL_TAG = "g2_R2_s42"  # bimp_st.paths.CANONICAL_TANGRAM
+OUT_TAG = str(config.get("out_tag", "") or "")
+if OUT_TAG == CANONICAL_TAG:
+    raise ValueError(
+        f"out_tag={CANONICAL_TAG} would overwrite the canonical Tangram object "
+        "(bimp_st.paths.CANONICAL_TANGRAM); pick a new tag"
+    )
+
+# The canonical recipe (bimp_st.paths.CANONICAL_TANGRAM; the re-map grid's
+# cell R2, run through
+# scripts/identity/run_tangram_remap_grid.sh): cluster mode on the full
+# reference, density term on (rna_count_based, lambda_d 1), reference-side
+# within-dissection cluster density, 500 epochs, linear scale. Only the seed is
+# a config knob (tangram_seed, default 42 as in the canonical run).
+TANGRAM_SEED = int(config.get("tangram_seed", 42))
+TANGRAM_ARGS = (
+    "--mode clusters --cluster-label {cluster_label} "
+    "--num-epochs 500 --max-cells 1400000 --data-scale linear "
+    "--max-ref-cells 0 --markers-per-cluster 200 "
+    "--density-prior rna_count_based --lambda-d 1 "
+    "--source-density cluster_density_within "
+    "--seed {seed} --device cuda"
+).format(cluster_label=CLUSTER_LABEL, seed=TANGRAM_SEED)
+
+# Targets. Nothing here is under results/; see the header for Tangram.
+TARGETS = [
+    f"{DATA_DIR}/combined_clustered.h5ad",
+    f"{WORKDIR}/figures/combined_clustered_differential.png",
+]
+if OUT_TAG:
+    TARGETS.append(f"{RESULTS_DIR}/tangram/combined_clustered_{OUT_TAG}_tangram.h5ad")
+
+rule all:
+    input: TARGETS
+
+# =============================================================================
+# COMBINE DATA FROM BOTH BRAINS
+# =============================================================================
+rule combine:
+    """Combine queen and worker aligned data"""
+    input:
+        queen=f"{QUEEN_DIR}/data/aligned_clustered.h5ad",
+        worker=f"{WORKER_DIR}/data/aligned_clustered.h5ad"
+    output:
+        f"{DATA_DIR}/combined.h5ad"
+    resources:
+        mem_mb=64000,
+        runtime=30
+    shell:
+        "cd {WORKDIR} && PYTHONPATH=" + PROJECT_ROOT + "/src ../../.venv/bin/python combined_analysis.py combine"
+
+# =============================================================================
+# CLUSTER COMBINED DATA (SHARED UMAP)
+# =============================================================================
+rule cluster:
+    """Cluster combined data with shared UMAP.
+
+    Resolution 2.8 is the value the canonical combined_clustered.h5ad was built
+    at: scripts/atlas/cluster_spatial_atlas.py swept 1.5-3.5 and kept the
+    resolution whose cluster count came closest to a target of 31 (2.8 -> 32
+    clusters; the sweep is in adata.uns['leiden_sweep']). This rule runs the
+    same HVG/PCA/neighbor/Leiden steps at that single resolution. The script's
+    own default of 1.0 gives ~10 clusters on this input. If combined.h5ad is
+    regenerated upstream, re-run the sweep and update this value.
+
+    Editing this shell line does not mark the canonical object stale, because
+    the profiles set `rerun-triggers: mtime` (see the header); only a newer
+    combined.h5ad does. The UMAP PNG the script also writes
+    (figures/combined_umap.png) is deliberately not a declared output: it is
+    absent from the main checkout, and a missing declared output would schedule
+    this rule and overwrite the canonical object.
+    """
+    input:
+        f"{DATA_DIR}/combined.h5ad"
+    output:
+        h5ad=f"{DATA_DIR}/combined_clustered.h5ad",
+    threads: 32
+    resources:
+        mem_mb=256000,
+        runtime=180,
+        cpus_per_task=32
+    shell:
+        "cd {WORKDIR} && NUMBA_NUM_THREADS={threads} PYTHONPATH=" + PROJECT_ROOT + "/src ../../.venv/bin/python combined_analysis.py cluster "
+        "--resolution 2.8 --n-jobs {threads}"
+
+# =============================================================================
+# DIFFERENTIAL COMPOSITION (parallel with tangram after cluster)
+# =============================================================================
+rule differential:
+    """Differential composition analysis"""
+    input:
+        f"{DATA_DIR}/combined_clustered.h5ad"
+    output:
+        f"{WORKDIR}/figures/combined_clustered_differential.png"
+    resources:
+        mem_mb=32000,
+        runtime=30
+    shell:
+        "cd {WORKDIR} && PYTHONPATH=" + PROJECT_ROOT + "/src ../../.venv/bin/python combined_analysis.py differential"
+
+# =============================================================================
+# TANGRAM: BUMBLEBEE (parallel after cluster)
+# =============================================================================
+if OUT_TAG:
+    rule tangram:
+        """Tangram cell type mapping on combined data, canonical recipe, new tag.
+
+        Writes results/tangram/combined_clustered_{out_tag}_{tangram,imputed}.h5ad.
+        Recipe and seed: see TANGRAM_ARGS above. Defined only when out_tag is set.
+        """
+        input:
+            spatial=f"{DATA_DIR}/combined_clustered.h5ad",
+            reference=SNRNA_REF
+        output:
+            tangram=f"{RESULTS_DIR}/tangram/combined_clustered_{OUT_TAG}_tangram.h5ad",
+            imputed=f"{RESULTS_DIR}/tangram/combined_clustered_{OUT_TAG}_imputed.h5ad"
+        resources:
+            # The full 1.3M cells need 192G and up to 10h.
+            mem_mb=192000,
+            runtime=600,
+            # gpu=1, not slurm_extra="--gres=gpu:1": the snakemake slurm executor
+            # plugin sets GRES itself and rejects the job outright if slurm_extra
+            # also carries --gres ("The --generic-resources-(GRES) option is not
+            # allowed in the 'slurm_extra' parameter").
+            gpu=1
+        shell:
+            # .venv/bin/python, not `uv run`: uv implicitly re-syncs, which rewrites
+            # the shared venv and drops the --no-deps tangram2 install this rule
+            # depends on.
+            #
+            # PYTHONPATH is needed because the bare interpreter does not have
+            # bimp_st installed, and tangram_mapping.py imports
+            # bimp_st.utils.gene_mapping at module scope; without it the job dies
+            # with ModuleNotFoundError and SLURM reports only "Reason: Unknown".
+            "cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src "
+            "../../.venv/bin/python tangram_mapping.py train "
+            "--reference {input.reference} --out-tag " + OUT_TAG + " " + TANGRAM_ARGS
+
+    # tangram_mapping.py qc is not a rule: it writes fixed, untagged PNGs into the
+    # shared results/tangram_qc/ whatever the tag. Run it by hand against a copy.
+
+    rule tangram_loocv:
+        """Leave-one-out cross-validation of the gene imputation (~3.5h on GPU).
+
+        Writes into a new directory, results/tangram/loocv_{out_tag}/ (the script
+        refuses a directory that already holds a run). The canonical run is
+        results/tangram/loocv_0af3056_20261020/ (scripts/identity/run_loocv_tangram2_0af3056.sh).
+        """
+        input:
+            spatial=f"{DATA_DIR}/combined_clustered.h5ad",
+            reference=SNRNA_REF
+        output:
+            f"{RESULTS_DIR}/tangram/loocv_{OUT_TAG}/combined_clustered_loocv_scores.csv"
+        params:
+            out_dir=f"{RESULTS_DIR}/tangram/loocv_{OUT_TAG}"
+        resources:
+            mem_mb=128000,
+            runtime=360,
+            gpu=1
+        shell:
+            "cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python tangram_mapping.py cross-validate --device cuda --out-dir {params.out_dir}"

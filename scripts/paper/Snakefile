@@ -1,0 +1,202 @@
+# The paper, as one DAG:
+#   analysis steps -> figures, tables, Supplementary Data
+#     -> sync into the manuscript (dry run) -> checks
+#
+# Usage (from the repo root; snakemake is not in .venv, see README.md):
+#   snakemake -s scripts/paper/Snakefile -n                  # what is stale (dry run)
+#   snakemake -s scripts/paper/Snakefile --cores 4           # target `paper`: everything
+#   snakemake -s scripts/paper/Snakefile --cores 4 figures   # generators only
+#   snakemake -s scripts/paper/Snakefile --cores 4 checks    # the checks, after whatever is stale
+#   bash scripts/paper/generate_all_figures.sh [main|si|<slug>...]   # by figure slug
+#
+# Every step writes into the SHARED results/ (the files the registered items
+# are checked against), so run it only when you mean to replace them. Set
+# BIMP_MANUSCRIPT to check a manuscript clone other than the submodule.
+#
+# Rules:
+#   generator  one per script in the registry (manuscript_figure_registry.py):
+#              every figure, table and Supplementary Data generator, and the
+#              analysis steps they need (ANALYSIS_PREDECESSOR, PRE_STEPS), which
+#              run first and in order.
+#   sync_dryrun, verify_figures, provenance:
+#              the checks. sync never copies here; after reading its log, run
+#              scripts/paper/sync_manuscript_figures.py --apply yourself.
+#
+# Inputs and staleness:
+#   - A step's `input:` is its own script (so an edit marks it stale), the data
+#     paths it names (manuscript_figure_registry.declared_inputs: literals and
+#     bimp_st.paths constants), the results/ files other pipelines write for it
+#     (ANALYSIS_RESULTS_INPUT), and the stamps of the steps it runs after.
+#     results/-to-results/ edges between generators are not traced beyond that.
+#     The DAG does not chain into the pipelines/* pipelines that make the atlas
+#     objects; each of those is dry-run on its own.
+#   - Outputs are stamp files, not a step's real PNG/CSV outputs (several write
+#     a whole directory through a shared helper). Stamps are per checkout, in
+#     .stamps/ at the repo root (gitignored), so two worktrees sharing results/
+#     never see each other's stamps. Whether a shipped figure is byte-current is
+#     what verify_manuscript_figures.py checks.
+
+import os
+import re
+import sys
+from pathlib import Path
+
+REPO = Path(workflow.basedir).resolve().parents[1]
+sys.path.insert(0, str(REPO / "scripts"))
+sys.path.insert(0, str(REPO / "src"))
+from paper.manuscript_figure_registry import (  # noqa: E402
+    ANALYSIS_RESULTS_INPUT,
+    FIGURES,
+    SUPPLEMENTARY_DATA_SCRIPT,
+    TABLES,
+    declared_inputs,
+    predecessors,
+)
+
+PY = config.get("python") or os.environ.get("BIMP_PY") or str(REPO / ".venv" / "bin" / "python")
+STAMPS = REPO / ".stamps"
+LOGS = REPO / "logs" / "paper"
+
+# PYTHONPATH as everywhere in this repo. BIMP_FIG_SUBSAMPLE_FRACTION defaults to
+# 0.1 (preview) inside the figure scripts; this entry point defaults it to 1,
+# the shipped artwork. numpy's AVX-512 log/exp kernels differ in the last bit
+# from the AVX2 ones, so an Intel node and an AMD node wrote different CSVs from
+# the same code and seed: pin numpy to its AVX2 kernels, OpenBLAS to the Haswell
+# kernels the AMD main partition runs (core type ZEN) and XLA (scCODA's NUTS) to
+# AVX2. Each pin keeps a value already in the environment.
+_NPY_AVX2_ONLY = (
+    "AVX512F AVX512CD AVX512_KNL AVX512_KNM AVX512_SKX AVX512_CLX AVX512_CNL "
+    "AVX512_ICL AVX512_SPR"
+)
+shell.prefix(
+    f"export PYTHONPATH={REPO}/src:{REPO}/scripts "
+    "BIMP_FIG_SUBSAMPLE_FRACTION=${{BIMP_FIG_SUBSAMPLE_FRACTION:-1}} "
+    "OPENBLAS_CORETYPE=${{OPENBLAS_CORETYPE:-ZEN}} "
+    "XLA_FLAGS=${{XLA_FLAGS:---xla_cpu_max_isa=AVX2}} "
+    f'NPY_DISABLE_CPU_FEATURES="${{{{NPY_DISABLE_CPU_FEATURES-{_NPY_AVX2_ONLY}}}}}" '
+    "MPLBACKEND=Agg && "
+)
+
+# ── Steps ────────────────────────────────────────────────────────────────────
+_targets = (
+    [f.generator for f in FIGURES]
+    + [t.generator for t in TABLES if t.generator]
+    + [SUPPLEMENTARY_DATA_SCRIPT]
+)
+# script -> the steps it runs after (its predecessors, chained in order)
+AFTER: dict[str, list[str]] = {}
+for _g in _targets:
+    _chain = predecessors(_g)
+    AFTER.setdefault(_g, [])
+    AFTER[_g] = sorted(set(AFTER[_g]) | set(_chain))
+    for _i, _s in enumerate(_chain):
+        AFTER.setdefault(_s, [])
+        if _i:
+            AFTER[_s] = sorted(set(AFTER[_s]) | {_chain[_i - 1]})
+
+
+def _by_key(scripts, kind):
+    out: dict[str, str] = {}
+    for s in sorted(scripts):
+        k = Path(s).stem
+        if k in out and out[k] != s:
+            raise ValueError(
+                f"{kind} stem collision: {k!r} names both {out[k]} and {s}; the "
+                "{key} wildcard can't tell them apart"
+            )
+        out[k] = s
+    return out
+
+
+GENERATOR_BY_KEY = _by_key(AFTER, "generator")
+FIGURE_KEYS = sorted({Path(f.generator).stem for f in FIGURES})
+
+
+def _stamp(kind, key):
+    return str(STAMPS / kind / f"{key}.done")
+
+
+def _generator_inputs(wc):
+    script = GENERATOR_BY_KEY[wc.key]
+    ins = [str(REPO / script), *declared_inputs(script)]
+    ins += [str(REPO / r) for r in ANALYSIS_RESULTS_INPUT.get(script, [])]
+    ins += [_stamp("generator", Path(p).stem) for p in AFTER[script]]
+    return ins
+
+
+GENERATED = [_stamp("generator", k) for k in sorted(GENERATOR_BY_KEY)]
+CHECKS = [
+    _stamp("checks", c)
+    for c in ("verify_figures", "provenance")
+]
+
+
+rule paper:
+    """Everything: steps, sync dry run, checks."""
+    default_target: True
+    input:
+        CHECKS,
+
+
+rule figures:
+    input:
+        GENERATED,
+
+
+rule checks:
+    input:
+        CHECKS,
+
+
+rule generator:
+    """Run one registry script (figure, table, Supplementary Data or analysis step), keyed by its filename stem."""
+    input:
+        _generator_inputs,
+    output:
+        touch(_stamp("generator", "{key}")),
+    params:
+        script=lambda wc: str(REPO / GENERATOR_BY_KEY[wc.key]),
+    log:
+        str(LOGS / "generator" / "{key}.log"),
+    resources:
+        mem_mb=64000,
+        runtime=60,
+        cpus_per_task=4,
+    wildcard_constraints:
+        key="|".join(re.escape(k) for k in GENERATOR_BY_KEY),
+    shell:
+        f"cd {REPO} && {PY} {{params.script}} > {{log}} 2>&1"
+
+
+rule sync_dryrun:
+    """What sync_manuscript_figures.py --apply would copy (never applied here)."""
+    input:
+        GENERATED,
+    output:
+        str(STAMPS / "checks" / "sync_dryrun.log"),
+    shell:
+        f"cd {REPO} && {PY} scripts/paper/sync_manuscript_figures.py > {{output}} 2>&1"
+
+
+rule verify_figures:
+    input:
+        str(STAMPS / "checks" / "sync_dryrun.log"),
+    output:
+        touch(_stamp("checks", "verify_figures")),
+    log:
+        str(LOGS / "checks" / "verify_figures.log"),
+    shell:
+        f"cd {REPO} && {PY} scripts/paper/verify_manuscript_figures.py > {{log}} 2>&1"
+
+
+rule provenance:
+    input:
+        GENERATED,
+        str(REPO / "scripts/paper/provenance_baseline.txt"),
+    output:
+        touch(_stamp("checks", "provenance")),
+    log:
+        str(LOGS / "checks" / "provenance.log"),
+    shell:
+        f"cd {REPO} && {PY} scripts/paper/check_data_provenance.py "
+        "--baseline scripts/paper/provenance_baseline.txt > {log} 2>&1"

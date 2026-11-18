@@ -1,0 +1,54 @@
+# pyDESeq2 environment for the n=3 vs n=3 snRNA caste DE (the ~ trial + caste
+# fits of scripts/caste_de/caste_de_blocked_all.py -> results/caste_de/, and
+# their controls). Kept apart from the shared .venv. Build once at the repo root:
+#
+#   uv venv -p 3.12 .venv-deseq2
+#   uv pip install --python .venv-deseq2 -r config/envs/deseq2.txt
+anndata==0.13.4
+annotated-types==0.8.0
+array-api-compat==1.16.0
+cloudpickle==3.1.2
+contourpy==1.4.0
+cycler==0.12.1
+donfig==0.8.1.post1
+fonttools==4.67.0
+formulaic==1.2.2
+formulaic-contrasts==1.0.0
+google-crc32c==1.9.0
+h5py==3.16.0
+interface-meta==2.0.1
+joblib==1.6.0
+kiwisolver==1.5.1
+legacy-api-wrap==1.5
+matplotlib==3.11.2
+msgspec==0.22.0
+narwhals==2.27.1
+natsort==8.4.0
+numcodecs==0.17.1
+numpy==2.5.4
+packaging==26.3
+pandas==3.1.0
+patsy==1.0.3
+pillow==13.0.0
+pydantic==2.14.1
+pydantic-core==2.50.1
+pydantic-settings==2.16.1
+pydeseq2==0.5.4
+pyparsing==3.3.3
+python-dateutil==3.0.0
+python-dotenv==1.2.4
+pyyaml==6.0.3
+scikit-learn==1.9.1
+scipy==1.18.1
+scverse-misc==0.1.7
+session-info==1.0.1
+session-info2==0.4.2
+six==1.17.0
+statsmodels==0.15.0
+stdlib-list==0.12.0
+threadpoolctl==3.7.0
+typing-extensions==4.16.0
+typing-inspection==0.4.4
+tzdata==2026.5
+wrapt==2.5.1
+zarr==3.4.1

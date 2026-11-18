@@ -1,0 +1,13 @@
+# Install once per clone:  uvx pre-commit install
+# Run over everything:     uvx pre-commit run --all-files
+#
+# The package (src/bimp_st) is held to ruff check and ruff format; scripts/ is
+# checked with `ruff check` on the files you change (scripts/paper/ci.sh).
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: ruff
+        files: '^src/bimp_st/'
+      - id: ruff-format
+        files: '^src/bimp_st/'

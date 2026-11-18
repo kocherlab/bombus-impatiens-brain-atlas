@@ -1,0 +1,71 @@
+{
+ "ppm": 15.0,
+ "channels": [
+  {
+   "name": "Tk_APMGFQGMR_H",
+   "mz": [
+    994.4597
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_AVMGFQGMR_H",
+   "mz": [
+    996.4754
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_AIMGFQGMR_H",
+   "mz": [
+    1010.491
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_APMGFHGMR_H",
+   "mz": [
+    1003.46
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_APMGFQGMR_Na",
+   "mz": [
+    1016.4417
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_APMGFQGMR_K",
+   "mz": [
+    1032.4156
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_anyMH_max",
+   "mz": [
+    994.4597,
+    996.4754,
+    1010.491,
+    1003.46
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "Tk_collab_993",
+   "mz": [
+    993.4757
+   ],
+   "role": "readout"
+  },
+  {
+   "name": "sNPF_collab_974",
+   "mz": [
+    974.5894
+   ],
+   "role": "readout"
+  }
+ ]
+}

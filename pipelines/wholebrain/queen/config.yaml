@@ -1,0 +1,18 @@
+# Brain 1 (queen). Per-brain settings for ../wholebrain.smk.
+brain_id: "brain1"
+brain_label: "queen"
+
+# `label`: no convert inputs (the queen's crops predate the pipeline).
+label_mem_mb: 8000
+label_runtime: 30
+
+# PASTE3 `align`, as run for the canonical aligned.h5ad (the Snakemake record of
+# that run carries exactly these flags). The queen used a 3000-cell subsample,
+# not 8000; an unread `paste3: subsample: 8000` block here said otherwise.
+align_args: "--subsample 3000 --align-images --max-rotation 20"
+align_mem_mb: 768000
+
+render_color_by: "regions"
+
+convert_regions: []
+high_mem_regions: []

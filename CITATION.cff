@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+title: "BIMP-ST: a whole-brain spatial transcriptomic atlas of Bombus impatiens"
+message: "If you use this software or the atlas it produces, please cite this repository. Ian Traniello and Scott W. Wolf are co-first authors and contributed equally."
+type: software
+authors:
+  - given-names: Ian
+    family-names: Traniello
+    orcid: "https://orcid.org/0000-0002-0001-3915"
+  - given-names: Scott W.
+    family-names: Wolf
+    orcid: "https://orcid.org/0000-0003-4397-1395"
+  - given-names: Andrew E.
+    family-names: Webb
+    orcid: "https://orcid.org/0000-0001-9632-5560"
+  - given-names: Fiona E.
+    family-names: Corcoran
+    orcid: "https://orcid.org/0009-0005-4755-9519"
+  - given-names: Eli S.
+    family-names: Wyman
+    orcid: "https://orcid.org/0000-0003-2197-6304"
+  - given-names: Xinhao
+    family-names: Liu
+    orcid: "https://orcid.org/0009-0008-9991-4502"
+  - given-names: Hongyu
+    family-names: Zheng
+    orcid: "https://orcid.org/0000-0002-7668-2090"
+  - given-names: Daniel C.
+    family-names: Castro
+    orcid: "https://orcid.org/0000-0002-9127-6242"
+  - given-names: Benjamin J.
+    family-names: Raphael
+    orcid: "https://orcid.org/0000-0003-1274-048X"
+  - given-names: Sarah D.
+    family-names: Kocher
+    orcid: "https://orcid.org/0000-0001-5586-0727"
+repository-code: "https://github.com/kocherlab/bombus-impatiens-brain-atlas"
+url: "https://kocherlab.github.io/bombus-impatiens-brain-atlas/"
+abstract: >-
+  A three-dimensional whole-brain spatial transcriptomic atlas of the bumble bee
+  Bombus impatiens: 1,300,192 cells profiled for 101 genes across serial sections
+  of a queen and a worker brain, aligned into a common volume and annotated
+  against a 29-type single-nucleus reference.
+keywords:
+  - spatial transcriptomics
+  - Bombus impatiens
+  - bumble bee
+  - brain atlas
+  - social insect
+  - Xenium
+  - single-nucleus RNA-seq
+license: MIT

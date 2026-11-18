@@ -1,0 +1,11 @@
+ion_out/
+cache/
+data
+.venv
+__pycache__/
+.pytest_cache/
+*.h5ad
+*.parquet
+*.npz
+*.zarr/
+*.7z

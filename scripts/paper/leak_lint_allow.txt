@@ -1,0 +1,10 @@
+# Leak-lint exceptions (scripts/paper/leak_lint.py), tab-separated:
+#   allow <pattern id> <path glob> <regex the line must match> <reason>
+allow	fold	*	\b1\.5 ?x (lead|over)	the vote rule parameter (a fine label needs a 1.5x lead over the runner-up), not a result
+allow	manuscript	scripts/paper/*	.	the paper tooling registers, checks and copies the figure, table and Supplementary Data files of the manuscript repository: naming it is its subject
+allow	shipped	scripts/paper/*	.	in the paper tooling a shipped file is the copy in the manuscript repository that the checks compare with its results/ source
+allow	the-paper	scripts/paper/*	.	the paper tooling builds and checks the manuscript's files (what counts as in the paper, the order it cites items)
+allow	supp-methods	scripts/paper/manuscript_figure_registry.py	then Supplementary Methods\)	the section order the Supplementary Data list follows
+allow	manuscript	README.md	BIMP_MANUSCRIPT|manuscript checkout|manuscript sources|manuscript-dependent|check the manuscript text	how to point the figure checks at a checkout of the manuscript repository
+allow	manuscript	scripts/README.md	manuscript repository|manuscript path|--manuscript DIR|into the manuscript|to the manuscript \(|built manuscript	map of the paper tooling, which copies and checks files of the manuscript repository
+allow	manuscript	scripts/deposit/export_numbered_si.py	--manuscript\b	the name of the command-line option

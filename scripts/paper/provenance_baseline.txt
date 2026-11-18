@@ -1,0 +1,11 @@
+# Reviewed findings of check_data_provenance.py, one key (file:check) per line.
+# Each reads the pre-correction tangram_cell_type of the spatial object on
+# purpose or in a diagnostic that no quoted number or shipped figure reads.
+# A new finding fails the check; so does a listed key that stops firing, so this
+# list only shrinks. Never add a key to make a commit pass: fix the read.
+scripts/atlas/atlas_overview_callout_box.py:spatial-label  # helper; fig:atlas_overview does not use its output
+scripts/atlas/snrna_xenium_joint_embedding.py:spatial-label  # joint-embedding diagnostic, Methods disclaim it as atlas quality
+scripts/identity/noncircular_validation.py:spatial-label  # Test D, declared circular and not quoted
+scripts/identity/section_raw_celltypes.py:spatial-label  # raw-call section plots, not shipped
+scripts/identity/vote_scheme_comparison.py:spatial-label  # method comparison of the pre-correction vote
+scripts/regions/region_structure.py:spatial-label  # exploratory diversity plot, not shipped

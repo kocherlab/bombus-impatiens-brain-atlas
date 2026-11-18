@@ -1,0 +1,168 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bimp-st"
+version = "0.1.0"
+description = "Bumblebee brain spatial transcriptomics analysis pipeline"
+license = {file = "LICENSE"}
+requires-python = ">=3.12"
+dependencies = [
+    "scanpy>=1.9.3",
+    "anndata>=0.9.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+    # tangram2 is deliberately NOT listed here -- see [tool.uv] below. It is a
+    # vendored submodule installed separately with --no-deps.
+    "pytorch-lightning>=2.6",
+    "lightning>=2.6",
+    "glum>=3.4",
+    "fbpca>=1.0",
+    "geosketch>=1.3",
+    "moscot>=0.5",
+    "wandb>=0.26",
+    "numpy-groupies>=0.11",
+    "natsort>=8.4.0",
+    "python-igraph>=0.11.8",
+    "leidenalg>=0.10.2",
+    "paste3",
+    "plotly>=6.1.2",
+    "spatialdata-io>=0.2.0",
+    "imagecodecs[all]>=2025.3.30",
+    "spatialdata[extra]>=0.3.0",
+    "typer>=0.16.0",
+    "torch>=2.7.0",
+    "pot>=0.9.5",
+    "scikit-image>=0.22.0",
+    "harmonypy>=0.2.0",
+    "pertpy>=1.0",
+    "openpyxl>=3.1.5",
+    # As-run: 1.9.0. bento-tools' LP model pickle needs <1.6, but bento-tools
+    # runs in its own environment (README, bento section), so no cap here: a
+    # cap would make the lock unresolvable against tangram2.
+    "scikit-learn>=1.5",
+    "antspyx>=0.6.3",
+    "opencv-python-headless",
+    "itk-elastix>=0.25.2",
+    "snakemake>=9.19.0",
+    "snakemake-executor-plugin-slurm>=2.6.0",
+]
+
+[project.urls]
+Repository = "https://github.com/kocherlab/bombus-impatiens-brain-atlas"
+Viewer = "https://kocherlab.github.io/bombus-impatiens-brain-atlas/"
+
+# Editable installs (`uv pip install --no-deps -e .`) put both src/ and scripts/
+# on sys.path, so `import bimp_st` and the scripts' sibling imports
+# (`from paper.manuscript_figure_registry import ...`, `from regions.x import ...`)
+# work without PYTHONPATH. Editable only: bimp_st.paths finds the data through
+# the checkout (REPO = the directory above src/), so a copied wheel finds none.
+[tool.hatch.build]
+dev-mode-dirs = ["src", "scripts"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bimp_st"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+# Vendored third-party code and archived work: not ours to lint or reformat.
+extend-exclude = [
+    "submodules",
+    "archive",
+    ".venv-deseq2",
+    "viewer/vendor",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["bimp_st"]
+
+[tool.ruff.lint.flake8-bugbear]
+# Typer declares CLI parameters as call defaults; they are evaluated once, by design.
+extend-immutable-calls = ["typer.Option", "typer.Argument"]
+
+[tool.ruff.lint.per-file-ignores]
+# Figure/analysis scripts must select a non-interactive Matplotlib backend
+# BEFORE importing pyplot, so their imports legitimately are not all at the top
+# of the file. Enforcing E402 here would push the pyplot import above
+# matplotlib.use("Agg") and break headless rendering.
+"scripts/*.py" = ["E402"]
+# B023: this script builds small accessor closures over a loop variable and
+# consumes them inside the same iteration, so late binding cannot bite. The
+# per-flag getters already use the explicit (lambda kk: ...)(k) binding.
+# Verified by the numbers themselves: its adjacent-section Dice reproduces
+# the value already published in the SI (0.832) to four decimals.
+"scripts/atlas/paste3_registration_accuracy.py" = ["E402", "B023"]
+"pipelines/**/*.py" = ["E402"]
+# The bento/ELLA scripts run in their own environments and keep long log and
+# table-format lines and one-line `a = ...; b = ...` setup; they are not
+# reformatted wholesale, so only these two style checks are off.
+"scripts/subcellular/*.py" = ["E402", "E501", "E702"]
+
+[tool.uv]
+# WHY MOSAICField IS NOT A uv DEPENDENCY.
+#
+# MOSAICField is an experimental alternative aligner (config: aligner:
+# mosaicfield); every result used the default paste3 aligner
+# instead. The pinned submodule commit carries no pyproject.toml or setup.py
+# on any of its refs, so listing it as a dependency makes `uv sync` and
+# `uv lock` fail outright for everyone, including users who never touch
+# MOSAICField. To use it, add a pyproject.toml to your checkout of
+# submodules/MOSAICField and install it separately:
+#
+#   uv pip install -e submodules/MOSAICField
+#
+# WHY tangram2 IS NOT A uv DEPENDENCY.
+#
+# tangram2's setup.py reads reqs/requirements.txt, which is not a dependency
+# spec but a ~250-line frozen environment dump: exact pins for jupyter, poetry,
+# black, astropy -- and for `tangram-sc==1.0.4`, the older PyPI package this
+# project does NOT use. Letting uv resolve it would put tangram-sc into uv.lock
+# and make the lock unresolvable against this project (wandb==0.20.1 vs >=0.26,
+# scikit-learn==1.7.0 vs the cap, and pytorch-lightning==2.5.2 vs >=2.6).
+#
+# So tangram2 is installed as a vendored submodule WITHOUT its dependencies,
+# which is how the environment behind every result was built:
+#
+#   uv sync                                     # everything else
+#   uv pip install --no-deps -e submodules/tangram2
+#
+# Its real runtime needs (torch, scanpy, numpy, ...) are satisfied by the
+# resolved dependencies above. `import wandb` is top-level in tangram2.mapping,
+# so wandb must be present, but it is only *called* under wandb_log=True, which
+# this project never sets -- the as-run environment carries wandb 0.28.0
+# against tangram2's 0.20.1 pin and maps correctly.
+#
+# Pinned at submodule commit 0af3056. Upstream Genentech/tangram2 can delete
+# commits, so fork before relying on 0af3056 persisting.
+
+[tool.uv.sources]
+paste3 = { path = "submodules/paste3" }
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "pytest>=8",
+    "ruff>=0.9",
+    "pre-commit>=4.0",
+    "pandas-stubs",
+    "nbclient>=0.10.2",
+    "pyvista>=0.45.2",
+    "tifffile==2024.12.12",
+    "vtk>=9.4.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

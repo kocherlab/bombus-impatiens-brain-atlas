@@ -1,0 +1,57 @@
+# Bento subcellular analysis — all brain x region pairs
+# Usage: snakemake --profile ../../config/profiles/slurm
+#
+# repo_root is optional here — the Snakefile derives it from its own location
+# by default. Set it only to override (e.g. running against a different clone).
+
+# Interpreter with bento-tools installed (repo-relative or absolute). Not the
+# shared .venv, which lacks bento-tools; no such env is built on this cluster,
+# so jobs stop with a message until one is.
+bento_python: ".venv-bento/bin/python"
+
+brains:
+  queen:
+    data_root: "data/20251204__194847___20251204"
+    regions:
+      - "output-XETG00151__0040240__Region_1__20251204__195014"
+      - "output-XETG00151__0040240__Region_2__20251204__195015"
+      - "output-XETG00151__0040240__Region_3__20251204__195015"
+      - "output-XETG00151__0040240__Region_4__20251204__195015"
+      - "output-XETG00151__0040240__Region_5__20251204__195015"
+      - "output-XETG00151__0040240__Region_6__20251204__195015"
+      - "output-XETG00151__0040240__Region_7__20251204__195015"
+      - "output-XETG00151__0040240__Region_8__20251204__195015"
+      - "output-XETG00151__0040243__Region_1__20251204__195015"
+      - "output-XETG00151__0040243__Region_2__20251204__195015"
+      - "output-XETG00151__0040243__Region_3__20251204__195015"
+      - "output-XETG00151__0040243__Region_4__20251204__195015"
+      - "output-XETG00151__0040243__Region_5__20251204__195015"
+      - "output-XETG00151__0040243__Region_6__20251204__195015"
+      - "output-XETG00151__0040243__Region_7__20251204__195015"
+      - "output-XETG00151__0040243__Region_8__20251204__195015"
+  worker:
+    data_root: "data/20260115__193720__20260115"
+    regions:
+      - "output-XETG00151__0068401__Region_1__20260115__193900"
+      - "output-XETG00151__0068401__Region_2__20260115__193900"
+      - "output-XETG00151__0068401__Region_3__20260115__193900"
+      - "output-XETG00151__0068401__Region_4__20260115__193900"
+      - "output-XETG00151__0068401__Region_5__20260115__193900"
+      - "output-XETG00151__0068401__Region_6__20260115__193900"
+      - "output-XETG00151__0068401__Region_7__20260115__193900"
+      - "output-XETG00151__0068401__Region_8__20260115__193900"
+      - "output-XETG00151__0069041__Region_1__20260115__193900"
+      - "output-XETG00151__0069041__Region_2__20260115__193900"
+      - "output-XETG00151__0069041__Region_3__20260115__193900"
+      - "output-XETG00151__0069041__Region_4__20260115__193900"
+      - "output-XETG00151__0069041__Region_5__20260115__193900"
+      - "output-XETG00151__0069041__Region_6__20260115__193900"
+      - "output-XETG00151__0069041__Region_7__20260115__193900"
+      - "output-XETG00151__0069041__Region_8__20260115__193900"
+
+# Default bento params
+full_slice: true
+num_workers: 64
+flux_res: 1
+skip_lp: false
+skip_coloc: true  # too slow at full-slice scale

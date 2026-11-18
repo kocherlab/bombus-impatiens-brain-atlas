@@ -1,0 +1,103 @@
+# md5 manifest of the MALDI inputs Fig. neuropeptide_spatial reads (2026-11-17).
+# Paths relative to pipelines/maldi/raw_extraction/. The figure reads
+# only ion_out/aligned_panel_princeton_{80524,80642}.h5ad (fig_neuropeptide_spatial.py
+# PRINCETON_DIR); the rest are their upstream inputs (README.md "Setup and
+# provenance"). Check:  cd pipelines/maldi/raw_extraction && md5sum -c ion_out.md5
+# Raw data (not hashed, 290 GB; size in bytes, mtime 2026-05-28), under data/ ->
+# <maldi_raw>:
+#   Princeton_imzmls/princeton_80524.ibd    128217885520
+#   Princeton_imzmls/princeton_80524.imzML    1233721605
+#   Princeton_imzmls/princeton_80642.ibd     91204354732
+#   Princeton_imzmls/princeton_80642.imzML     905700113
+ae4c03a60a88b20e86377a6531249d14  ion_out/aligned_panel_princeton_80524.h5ad
+5c7dc32a58f2291f122c7227b8808c09  ion_out/aligned_panel_princeton_80642.h5ad
+b765a93c020067f234edcdc97f9688a5  ion_out/panel_princeton_80524.parquet
+25ce700fd68e05b6336e66c9ad3d5cf1  ion_out/panel_princeton_80642.parquet
+7758db6aedb780693ffbef56db0e0039  ion_out/slices_princeton_80524/slice_000.h5ad
+b45238fccb3832d21a4b3ebfc461187a  ion_out/slices_princeton_80524/slice_001.h5ad
+dcb00c3724c7a4a134d2ac034b60a9ed  ion_out/slices_princeton_80524/slice_002.h5ad
+9866a8ccf9d82a3e705cf0532955c0d6  ion_out/slices_princeton_80524/slice_003.h5ad
+49124494e3285d105ab9b44fdd7b42ac  ion_out/slices_princeton_80524/slice_004.h5ad
+bd75a921b711e2fb956aeae8358907ed  ion_out/slices_princeton_80524/slice_005.h5ad
+7345f10ef6323f410122c66fb9448d90  ion_out/slices_princeton_80524/slice_006.h5ad
+26e5f7c19551d1b3372d42bc7f7daf7f  ion_out/slices_princeton_80524/slice_007.h5ad
+c0c6c1b16cc2aeda314e14ffd1bbd103  ion_out/slices_princeton_80524/slice_008.h5ad
+e3f68ef021a97cf22524b32432424f04  ion_out/slices_princeton_80524/slice_009.h5ad
+b762e965f61cc4368af691e82c5976ec  ion_out/slices_princeton_80524/slice_010.h5ad
+897e116cfc38ca57399524fc9198f0af  ion_out/slices_princeton_80524/slice_011.h5ad
+f5aaeb86efd89025533c22eeaa6cc10a  ion_out/slices_princeton_80524/slice_012.h5ad
+5583977682a945a0b37e22716083834c  ion_out/slices_princeton_80524/slice_013.h5ad
+5fd371484eb9aab63b5e99f00de5808e  ion_out/slices_princeton_80524/slice_014.h5ad
+012d7d440506d630df6b5ebf7b748c07  ion_out/slices_princeton_80524/slice_015.h5ad
+3ff3846949264d3bd26298fcda70fef8  ion_out/slices_princeton_80524/slice_016.h5ad
+8a4196a3a894367074a216212cc894e6  ion_out/slices_princeton_80524/slice_017.h5ad
+fdc432474b76866b9fa88269206de58c  ion_out/slices_princeton_80524/slice_018.h5ad
+89831a32df863e2b2f0643e45457de10  ion_out/slices_princeton_80524/slice_019.h5ad
+c2c66c04f5918f23f01eeacc73dda96b  ion_out/slices_princeton_80524/slice_020.h5ad
+6753afcd226b6ba9eac7e1c85eaca564  ion_out/slices_princeton_80524/slice_021.h5ad
+3f18b5eea30b6fee119e100812c742bf  ion_out/slices_princeton_80524/slice_022.h5ad
+f2c18d898ab67d73d79e549bb03d6376  ion_out/slices_princeton_80524/slice_023.h5ad
+df0b8f3f272c1cd18885ce62771e626a  ion_out/slices_princeton_80524/slice_024.h5ad
+dc1ff7cf4ff75af2da9eb74577b4e2c2  ion_out/slices_princeton_80524/slice_025.h5ad
+23844f1115df99ca9fe7275de12487a3  ion_out/slices_princeton_80524/slice_026.h5ad
+245e615e8620c9d8211c62372e1bc720  ion_out/slices_princeton_80524/slice_027.h5ad
+89b88da63bae6df3daf1a6dd765d5f95  ion_out/slices_princeton_80524/slice_028.h5ad
+70438e83dfe265722d5dcc32bf459cdf  ion_out/slices_princeton_80524/slice_029.h5ad
+cdb5f6a0074351191e8ad4ddb4cc1909  ion_out/slices_princeton_80524/slice_030.h5ad
+2ae500af2ed0e9d7e007d1b6d1490177  ion_out/slices_princeton_80524/slice_031.h5ad
+eda0de601d374f55c9f1b98668773a35  ion_out/slices_princeton_80524/slice_032.h5ad
+cde6b0e76280e12cbe663ac569f49e83  ion_out/slices_princeton_80524/slice_033.h5ad
+011889b3c22482d59d60dcf3f40b26b2  ion_out/slices_princeton_80524/slice_034.h5ad
+f5a9d868909b9f5c5d5a59f9c687517e  ion_out/slices_princeton_80524/slice_035.h5ad
+d4e40df9ed6f32c0b722239a21d33e41  ion_out/slices_princeton_80524/slice_036.h5ad
+340a9492d7bd0a9578a76d28d6e2c09c  ion_out/slices_princeton_80524/slice_037.h5ad
+208a7ed3f8e5a04f64b1679f1e86f7e1  ion_out/slices_princeton_80524/slice_038.h5ad
+e4967ad94e705d7181fa552a36d2fbcd  ion_out/slices_princeton_80524/slice_039.h5ad
+766772ed33fcf6469cbfc0ce4c3c4d70  ion_out/slices_princeton_80642/slice_000.h5ad
+69a3a71bf44cb2a26318016d92b4cd62  ion_out/slices_princeton_80642/slice_001.h5ad
+a491bfbd1ca4a3a8485b8bb4eeda8405  ion_out/slices_princeton_80642/slice_002.h5ad
+206b9d7f2eea64fb0978ac74c7fbb980  ion_out/slices_princeton_80642/slice_003.h5ad
+1740fccf5043bebd183c8893691da212  ion_out/slices_princeton_80642/slice_004.h5ad
+729971000b287a007c5f038a14ea90a6  ion_out/slices_princeton_80642/slice_005.h5ad
+75f63462151c66b41e4c66d97a7f3c46  ion_out/slices_princeton_80642/slice_006.h5ad
+0a906464d43e510d86641feb6ba8fb0c  ion_out/slices_princeton_80642/slice_007.h5ad
+edf6c9a41d0b2874551ed68b8a9129cd  ion_out/slices_princeton_80642/slice_008.h5ad
+18c738d8b05769f83c89fe9133b4ddd7  ion_out/slices_princeton_80642/slice_009.h5ad
+6b995b784df93b4c806e363498fe1cac  ion_out/slices_princeton_80642/slice_010.h5ad
+d77ef33cb71053162a8f9c9357c900f0  ion_out/slices_princeton_80642/slice_011.h5ad
+1278b58a56c2d85677d0eeb3c6353454  ion_out/slices_princeton_80642/slice_012.h5ad
+4c78a443b46412f6cee88add924806a2  ion_out/slices_princeton_80642/slice_013.h5ad
+dc23a6a7bb0e8c2bab1b2ce18b4e5fe3  ion_out/slices_princeton_80642/slice_014.h5ad
+e4b5d29b8cd159f25794f7f5f906d79c  ion_out/slices_princeton_80642/slice_015.h5ad
+3b815c34f984e71921260286987c5cb1  ion_out/slices_princeton_80642/slice_016.h5ad
+5aaab80db60b0575e7d06d85961cb4b2  ion_out/slices_princeton_80642/slice_017.h5ad
+d7004b2f1b8a82596a7079f44ebbc0ae  ion_out/slices_princeton_80642/slice_018.h5ad
+e94ec0baa20f6eaaa8e375c49cc25977  ion_out/slices_princeton_80642/slice_019.h5ad
+ea9a5bf8ba558aa979737692b239daa0  ion_out/slices_princeton_80642/slice_020.h5ad
+86a9c3cb3f16b435c5ed2cd3c97b65b8  ion_out/slices_princeton_80642/slice_021.h5ad
+86c302177a04f90a4ab029399d8d5fb2  ion_out/slices_princeton_80642/slice_022.h5ad
+a14ab9b42fae19bbebce67168f018edf  ion_out/slices_princeton_80642/slice_023.h5ad
+686035b452bf9a15404de2bbd4d21307  ion_out/slices_princeton_80642/slice_024.h5ad
+a9905f1b893a66812be1046b126cd617  ion_out/slices_princeton_80642/slice_025.h5ad
+1740406fd9489e9669e1eb57db2b131c  ion_out/slices_princeton_80642/slice_026.h5ad
+f39e105ae69f6977b51d6aeebacc402f  ion_out/slices_princeton_80642/slice_027.h5ad
+cea4755fcdcf6a3b72dce93e4395005e  ion_out/slices_princeton_80642/slice_028.h5ad
+c55dce21a4c1635039d13ff381b1a429  ion_out/slices_princeton_80642/slice_029.h5ad
+bf1365ec4a684eace1401d706d4e81fb  ion_out/slices_princeton_80642/slice_030.h5ad
+003e7b9a8971f9e57ad41a56817d7d57  ion_out/slices_princeton_80642/slice_031.h5ad
+1b637cef1d22923a4c35d8d8577ae86e  ion_out/slices_princeton_80642/slice_032.h5ad
+c0ba04e612ef73f1233861ea471728f6  ion_out/slices_princeton_80642/slice_033.h5ad
+fab73c6fe8818a819cca349c106c09aa  ion_out/slices_princeton_80642/slice_034.h5ad
+81f96fe01e32ef42fbb7f8e0483d8ce7  ion_out/slices_princeton_80642/slice_035.h5ad
+47c7e6525a51fb203d0606e2fb50cbac  ion_out/slices_princeton_80642/slice_036.h5ad
+f1b3c1f229e2a6fe46c47b51c170da64  ion_out/slices_princeton_80642/slice_037.h5ad
+68a914efc3dff2b93b8227958943009d  ion_out/slices_princeton_80642/slice_038.h5ad
+fbb15694fdf16b104b6e3e5583156e30  ion_out/slices_princeton_80642/slice_039.h5ad
+88cae8eaf82f3976b655b3a085f044f6  ion_out/features_princeton_80524_ppm15.parquet
+f8a40e4bbce181010751e928b33a028e  ion_out/features_princeton_80642_ppm15.parquet
+f7aeace41ce7b1ef9fecb08243941bf0  channel_spec.json
+6cac1279e35126cef2b528b9c7a3d078  channel_spec_tk.json
+d7d725056c709858af2db0d1b124ab7c  cache/cache_80524.npz
+98c157b88352a647cdcbcd4de0584a62  cache/cache_80642.npz
+6453698ecfe553deecec9c848735e0c0  cache/offsets_80524.parquet
+1026ae1a162d6d639fe875f5798a9ad2  cache/offsets_80642.parquet

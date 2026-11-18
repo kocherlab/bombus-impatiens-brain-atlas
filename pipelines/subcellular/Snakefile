@@ -1,0 +1,80 @@
+# Bento Subcellular Analysis Pipeline
+#
+# Runs bento-tools subcellular analysis (RNAflux, fluxmap, LP, composition)
+# on every Xenium region across both brains.
+#
+# Usage:
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/slurm    # SLURM production
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/local     # Local testing
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake -n --profile ../../config/profiles/slurm  # Dry run
+
+from pathlib import Path
+
+configfile: "config.yaml"
+
+# repo_root defaults to two levels up from this Snakefile (pipelines/<dir>/..);
+# override in config.yaml only when running against a different clone.
+REPO = config.get("repo_root") or str(Path(workflow.basedir).resolve().parent.parent)
+
+# bento-tools is not in the shared .venv and has no environment built on this
+# cluster, so the interpreter is a config value (bento_python, repo-relative or
+# absolute) and each job fails at once with a clear message if it is missing.
+BENTO_PY = config["bento_python"]
+
+shell.prefix(
+    "export HDF5_USE_FILE_LOCKING=FALSE "
+    "OMP_NUM_THREADS=1 "
+    "MKL_NUM_THREADS=1 "
+    "&& "
+)
+
+# Build list of all (brain, region) pairs from config
+PAIRS = []
+for brain_name, brain_cfg in config["brains"].items():
+    for region in brain_cfg["regions"]:
+        PAIRS.append((brain_name, region))
+
+
+rule all:
+    input:
+        [
+            f"{REPO}/results/bento/{brain}/{region}/crop_comp.png"
+            for brain, region in PAIRS
+        ],
+
+
+rule bento:
+    """Run bento subcellular analysis on a single Xenium region."""
+    input:
+        xenium_dir=lambda wc: (
+            f"{REPO}/{config['brains'][wc.brain]['data_root']}/{wc.region}"
+        ),
+    output:
+        comp_png=f"{REPO}/results/bento/{{brain}}/{{region}}/crop_comp.png",
+    params:
+        output_dir=lambda wc: f"{REPO}/results/bento/{wc.brain}/{wc.region}",
+        cache_dir=lambda wc: f"{REPO}/data/bento/{wc.brain}/{wc.region}",
+        skip_lp=lambda wc: "--skip-lp" if config.get("skip_lp") else "",
+        skip_coloc=lambda wc: "--skip-coloc" if config.get("skip_coloc") else "--no-skip-coloc",
+        full_slice=lambda wc: "--full-slice" if config.get("full_slice") else "--no-full-slice",
+    resources:
+        mem_mb=128000,
+        runtime=600,
+        cpus_per_task=64,
+    shell:
+        """
+        cd {REPO} && \
+        {{ test -x {BENTO_PY} || {{ echo "bento_python={BENTO_PY} is not an interpreter: build a bento-tools env (not the shared .venv) and set it in config.yaml" >&2; exit 1; }}; }} && \
+        mkdir -p {params.output_dir} {params.cache_dir} && \
+        {BENTO_PY} pipelines/subcellular/bento_region.py \
+            --xenium-path {input.xenium_dir} \
+            --brain {wildcards.brain} \
+            --region {wildcards.region} \
+            --output-dir {params.output_dir} \
+            --cache-dir {params.cache_dir} \
+            --num-workers {resources.cpus_per_task} \
+            --flux-res {config[flux_res]} \
+            {params.full_slice} \
+            {params.skip_lp} \
+            {params.skip_coloc}
+        """

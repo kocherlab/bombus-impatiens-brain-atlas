@@ -1,0 +1,10 @@
+# Continuous integration (scripts/paper/ci.sh): lint,
+# unit tests and the data-free manuscript checks. Small on purpose; nothing
+# here touches results/ or the atlas objects.
+anndata==0.11.4
+numpy==2.2.6
+pandas==2.3.0
+pillow==12.2.0
+pytest==9.2.0
+ruff==0.17.5
+shapely==2.1.1

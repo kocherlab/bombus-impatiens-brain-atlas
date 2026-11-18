@@ -1,0 +1,38 @@
+# Brain 2 (worker). Per-brain settings for ../wholebrain.smk.
+brain_id: "brain2"
+brain_label: "worker"
+
+# `label` waits for every region's convert_region job.
+label_mem_mb: 64000
+label_runtime: 120
+
+# PASTE3 `align`, as run for the canonical aligned.h5ad (the Snakemake record of
+# that run carries exactly these flags): 8000-cell subsample, and rotations of
+# +/-70-110 degrees allowed besides the +/-20 degree default.
+align_args: "--subsample 8000 --max-rotation 20 --allow-90-rotation"
+align_mem_mb: 512000
+
+render_color_by: "leiden"
+
+# Raw Xenium regions converted by convert_single_region.py (one base_image and
+# one convert_region job each).
+convert_regions:
+  - "output-XETG00151__0068401__Region_1__20260115__193900"
+  - "output-XETG00151__0068401__Region_2__20260115__193900"
+  - "output-XETG00151__0068401__Region_3__20260115__193900"
+  - "output-XETG00151__0068401__Region_4__20260115__193900"
+  - "output-XETG00151__0068401__Region_5__20260115__193900"
+  - "output-XETG00151__0068401__Region_6__20260115__193900"
+  - "output-XETG00151__0068401__Region_7__20260115__193900"
+  - "output-XETG00151__0068401__Region_8__20260115__193900"
+  - "output-XETG00151__0069041__Region_1__20260115__193900"
+  - "output-XETG00151__0069041__Region_2__20260115__193900"
+  - "output-XETG00151__0069041__Region_3__20260115__193900"
+  - "output-XETG00151__0069041__Region_4__20260115__193900"
+  - "output-XETG00151__0069041__Region_5__20260115__193900"
+  - "output-XETG00151__0069041__Region_6__20260115__193900"
+  - "output-XETG00151__0069041__Region_7__20260115__193900"
+  - "output-XETG00151__0069041__Region_8__20260115__193900"
+# Region 3 of slide 1 holds 4 sections and needs 512 GB.
+high_mem_regions:
+  - "output-XETG00151__0068401__Region_3__20260115__193900"

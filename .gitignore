@@ -1,0 +1,41 @@
+# Python and tooling
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv
+.venv-*/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints
+.snakemake/
+.stamps/
+logs/
+slurm-*.out
+*.log
+
+# Site configuration (template: config/site.example.toml)
+config/site.toml
+
+# External sources installed per README.md
+submodules/
+vendor/
+
+# Data and outputs: everything but the small tracked reference tables
+data/*
+!data/panel/
+!data/genome/
+!data/annotations/
+results
+pipelines/**/data/
+pipelines/maldi/raw_extraction/ion_out
+pipelines/maldi/raw_extraction/cache
+*.h5ad
+*.h5
+*.zarr/
+*.npy
+*.pkl
+*.tif
+*.tiff
+/export/

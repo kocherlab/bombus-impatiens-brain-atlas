@@ -1,0 +1,67 @@
+# Genome assembly and annotation statistics, recomputed from the released
+# BIMP v4 / v4.3 files.
+# The assembly (hifiasm/YaHS/Juicebox) and the EGAPx annotation are not rerun
+# here; their provenance is in the Methods.
+#
+#   uvx --from snakemake snakemake -s scripts/gene_annotation/Snakefile --cores 16 -n
+#   (from the repo root; add --profile config/profiles/slurm for Slurm)
+#
+# Rules write into the shared results/ (results/genome/, results/handoff/genome_stats/).
+
+import sys
+
+sys.path.insert(0, "src")
+from bimp_st.site import lookup as site_lookup  # noqa: E402
+
+
+def site_path(key, *parts):
+    """An off-repo input (bimp_st.site key; config/site.example.toml). Unset, it
+    becomes a path that names the key, so the DAG still parses and the missing
+    input says what to set."""
+    v = site_lookup(key)
+    return "/".join([v or f"UNSET-site-key-{key}", *parts])
+
+
+RELEASE = site_path("genome_release")
+FASTA = site_path("genome_dir", "genome", "BIMP_genome_v4.fasta")
+PY = "PYTHONPATH=src:scripts .venv/bin/python"
+BUSCO_GENOME = (
+    "results/handoff/genome_stats/busco_hymenoptera_odb12/"
+    "short_summary.specific.hymenoptera_odb12.busco_hymenoptera_odb12.json"
+)
+
+
+rule all:
+    input:
+        "results/genome/annotation_busco/summary.json",
+        "results/handoff/genome_stats/summary.json",
+
+
+rule annotation_busco:
+    """BUSCO 6.0.0 proteins mode, hymenoptera_odb12, longest isoform per gene."""
+    input:
+        pep=f"{RELEASE}/BIMP_OGS_v4.3_pep.fa",
+        script="scripts/gene_annotation/run_annotation_busco.sh",
+        longest="scripts/gene_annotation/longest_isoform_proteins.py",
+    output:
+        "results/genome/annotation_busco/summary.json",
+    threads: 16
+    resources:
+        mem_mb=32000,
+        runtime=720,
+    shell:
+        "SLURM_CPUS_PER_TASK={threads} bash {input.script}"
+
+
+rule assembly_stats:
+    """Scaffold / contig / gap counts of BIMP_genome_v4 (+ the genome-mode BUSCO)."""
+    input:
+        fasta=FASTA,
+        script="scripts/gene_annotation/genome_assembly_stats.py",
+    output:
+        "results/handoff/genome_stats/summary.json",
+    resources:
+        mem_mb=8000,
+    shell:
+        "{PY} {input.script} --fasta {input.fasta}"
+        " $( [ -f {BUSCO_GENOME} ] && echo --busco {BUSCO_GENOME} )"

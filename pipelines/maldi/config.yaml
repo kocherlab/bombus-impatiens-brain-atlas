@@ -1,0 +1,39 @@
+# MALDI-MSI pipeline configuration (new-format CSV, MALDI-III)
+
+# --- Samples (queen / worker MALDI-III) ---
+# Each sample is one wide-format CSV with all regions stacked.
+samples:
+  - id: queen_80524
+    label: queen
+    csv: ../../data/maldi/new_maldi/Princeton80642/Princeton80542_v2.csv
+  - id: worker_80642
+    label: worker
+    csv: ../../data/maldi/new_maldi/Princeton80642/Princeton80642.csv
+  # Add when uploaded:
+  # - id: worker_80642c
+  #   label: worker
+  #   csv: ../../data/maldi/new_maldi/Princeton80642/Princeton80642c.csv
+
+# Gene-name mapping (BIMP_v4.3 → LOC → description)
+mapping_csv: ../../data/panel/np31_to_v43_mapping.csv
+
+# --- Spydata overlay (reference only; not in default targets) ---
+atlas_spydata: "../../data/maldi/Raw MALDI/BumbleBeeOverlay/Paste_BumbleBee.spydata"
+atlas_slide_id: "78942"
+
+# --- Ingest ---
+ingest_chunksize: 20000
+
+# --- QC ---
+tic_min_quantile: 0.0       # Keep all spots (low signal is biologically meaningful)
+normalization: "tic"
+nan_strategy: "zero"
+
+# --- Alignment (PASTE3) ---
+aligner: "paste3"
+paste3_max_iter: 100000000
+paste3_method: "both"
+center_align_seed: 5
+
+# --- Voxelization ---
+voxel_size_um: 20

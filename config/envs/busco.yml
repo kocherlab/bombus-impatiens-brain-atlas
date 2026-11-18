@@ -1,0 +1,11 @@
+# BUSCO for the annotation completeness quoted in Methods ("Genome annotation":
+# BUSCO v6.0.0, hymenoptera_odb12). Not the project .venv: build it apart, e.g.
+#   micromamba create -y -p <env dir> -f config/envs/busco.yml
+# and point scripts/gene_annotation/run_annotation_busco.sh at it (site key busco6_env,
+# or BUSCO6_ENV).
+name: busco6
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - busco=6.0.0

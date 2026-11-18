@@ -1,0 +1,294 @@
+input:
+  busco_lineage: hymenoptera_odb10
+  cmsearch:
+    files:
+    - https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/cmsearch/1/Rfam.seed
+    - https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/cmsearch/1/rfam1410.cm
+    - https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/cmsearch/1/rfam1410_amendments.xml
+  genome: <SCRATCH>/Assemblies/BIMP/prospective_assembly/BIMP_genome_v3.fasta
+  genome_size_threshold: 500000000
+  gnomon_filtering_scores_file:
+  - https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/misc/2/added_scores_general.txt
+  - https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/misc/2/added_scores_RNAseq.txt
+  hmm: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/gnomon/2/hmm_parameters/30195.params
+  long_reads:
+  - - flnc-1
+    - - <LAB_DATA>/IsoSeq/BIMP/Isoseq_analysis_13887/flnc-1.fa
+  - - flnc-2
+    - - <LAB_DATA>/IsoSeq/BIMP/Isoseq_analysis_13887/flnc-2.fa
+  long_reads_metadata: <SCRATCH>/Annotations/NCBI/egapx/BIMP_v4.3/sra_metadata.dat
+  max_intron: 600000
+  name_cleanup_rules_file: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/misc/2/name_cleanup_rules.txt
+  ortho:
+    genomic.fna: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/ortholog_references/3/7460/current/genomic.fna.gz
+    genomic.gff: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/ortholog_references/3/7460/current/genomic.gff.gz
+    name_from.rpt: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/ortholog_references/3/7460/name_from_ortholog.rpt
+    protein.faa: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/ortholog_references/3/7460/current/protein.faa.gz
+    taxid: 7460
+  prot_denylist: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/reference_sets/3/swissprot_organelle_bacteria.gi
+  proteins: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/target_proteins/2/7399.faa.gz
+  proteins_trusted: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/target_proteins/2/7399.trusted_proteins.gi
+  reference_sets: https://ftp.ncbi.nlm.nih.gov/genomes/TOOLS/EGAP/support_data/reference_sets/3/swissprot.asnb.gz
+  short_reads:
+  - - SRR11881307
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881307_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881307_R2.fq.gz
+  - - SRR11881346
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881346_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881346_R2.fq.gz
+  - - SRR11881348
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881348_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881348_R2.fq.gz
+  - - SRR11881352
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881352_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR11881352_R2.fq.gz
+  - - SRR23073833
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073833_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073833_R2.fq.gz
+  - - SRR23073839
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073839_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073839_R2.fq.gz
+  - - SRR23073843
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073843_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073843_R2.fq.gz
+  - - SRR23073853
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073853_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073853_R2.fq.gz
+  - - SRR23073862
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073862_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073862_R2.fq.gz
+  - - SRR23073864
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073864_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073864_R2.fq.gz
+  - - SRR23073868
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073868_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073868_R2.fq.gz
+  - - SRR23073883
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073883_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073883_R2.fq.gz
+  - - SRR23073901
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073901_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR23073901_R2.fq.gz
+  - - SRR26132659
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132659_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132659_R2.fq.gz
+  - - SRR26132660
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132660_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132660_R2.fq.gz
+  - - SRR26132661
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132661_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132661_R2.fq.gz
+  - - SRR26132662
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132662_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132662_R2.fq.gz
+  - - SRR26132666
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132666_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132666_R2.fq.gz
+  - - SRR26132668
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132668_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132668_R2.fq.gz
+  - - SRR26132669
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132669_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132669_R2.fq.gz
+  - - SRR26132671
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132671_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR26132671_R2.fq.gz
+  - - SRR28027262
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR28027262_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR28027262_R2.fq.gz
+  - - SRR28027277
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR28027277_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR28027277_R2.fq.gz
+  - - SRR28027288
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR28027288_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_SRA/FASTQ/Trimmed/SRR28027288_R2.fq.gz
+  - - Dev_100-P8
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_100-P8_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_100-P8_R2.fq.gz
+  - - Dev_100-Queen
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_100-Queen_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_100-Queen_R2.fq.gz
+  - - Dev_101-Queen
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_101-Queen_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_101-Queen_R2.fq.gz
+  - - Dev_2-Callow
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_2-Callow_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_2-Callow_R2.fq.gz
+  - - Dev_3-Callow
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_3-Callow_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_3-Callow_R2.fq.gz
+  - - Dev_37-2d
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_37-2d_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_37-2d_R2.fq.gz
+  - - Dev_38-2d
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_38-2d_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_38-2d_R2.fq.gz
+  - - Dev_50-5d
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_50-5d_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_50-5d_R2.fq.gz
+  - - Dev_54-5d
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_54-5d_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_54-5d_R2.fq.gz
+  - - Dev_77-10d
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_77-10d_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_77-10d_R2.fq.gz
+  - - Dev_78-10d
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_78-10d_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_78-10d_R2.fq.gz
+  - - Dev_82-P1
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_82-P1_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_82-P1_R2.fq.gz
+  - - Dev_87-P1
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_87-P1_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_87-P1_R2.fq.gz
+  - - Dev_88-P8
+    - - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_88-P8_R1.fq.gz
+      - <LAB_DATA>/RNAseq/BIMP/BIMP_Assembly_Samples/BIMP_Assembly_Lab/FASTQ/Trimmed/Dev_88-P8_R2.fq.gz
+  short_reads_metadata: <SCRATCH>/Annotations/NCBI/egapx/BIMP_v4.3/sra_metadata.dat
+  symbol_format_class: 'NULL'
+  taxid: 132113
+  train_hmm: false
+tasks:
+  align_filter_sa:
+    align_filter: -filter 'rank=1 OR (pct_identity_gapopen_only > 58 AND (pct_coverage
+      > 50 OR align_length_ungap > 1000))' -ifmt seq-align
+  align_sort_sa:
+    align_sort: -k subject,subject_start,-subject_end,subject_strand,query,query_start,-query_end,query_strand,-num_ident,gap_count
+  annot_builder:
+    annot_builder: ''
+  annotwriter:
+    annotwriter: ''
+  bam_bin_and_sort:
+    bam_bin: -avg-size-per-bin 200000000 -file-pattern 'bin#.bam' -exclude-organelle
+  bam_strandedness:
+    rnaseq_divide_by_strandedness: -min-aligned 1000000 -min-unambiguous 200 -min-unambiguous-pct
+      2 -percentage-threshold 98
+  best_aligned_prot:
+    best_placement: -asm_alns_filter 'reciprocity = 3'
+  best_protein_hits:
+    align_filter: -filter 'pct_coverage >= 50'
+    align_sort: -k query,-bit_score,slen,-align_length -group 1 -top 1
+  chainer_sort_alignments:
+    align_sort: -ifmt seq-align  -k subject,subject_start,-subject_end,subject_strand,query,query_start,-query_end,query_strand,-num_ident,gap_count
+  chainer_wnode:
+    chainer_wnode: -altfrac 80.0 -capgap 5 -cdsbonus 0.05 -composite 10000 -end-pair-support-cutoff
+      0.1 -endprotfrac 0.05 -filters 'remove_single_exon_est_models remove_single_exon_noncoding_models'
+      -high-identity 0.98 -hmaxlen 0.25 -hthresh 0.02 -i3p 14.0 -i5p 7.0 -lenpen 0.005
+      -longenoughcds 900 -max-extension 20 -min-consensus-support 2 -min-edge-coverage
+      5 -min-non-consensussupport 10 -min-support-fraction 0.03 -minex 10 -mininframefrac
+      0.95 -minlen 165 -minpolya 6 -minprotfrac 0.9 -minscor 25.0 -minsupport 3 -minsupport_mrna
+      1 -minsupport_rnaseq 5 -mrnaCDS use_objmgr -oep 10 -protcdslen 450 -sharp-boundary
+      0.2 -tolerance 3 -trim 6 -utrclipthreshold 0.01 -fillgenomicgaps -filterest
+      -filtermrna -filterprots -opposite -collapsest
+    gpx_make_outputs: -default-output-name chains -slices-for affinity -sort-by affinity
+    input_aligns_sort: merge_only
+    submit_chainer: -minimum-abut-margin 20 -separate-within-introns
+  cmsearch:
+    annot_merge: -euk -unique
+    cmsearch_wnode: -exclusive-threshold 100000
+    num_batches: 16
+  convert_annotations:
+    annotwriter_gff: ''
+    annotwriter_gtf: ''
+  convert_from_bam:
+    sam2asn: -filter 'pct_identity_gap >= 95' -ofmt seq-align-compressed -collapse-identical
+      -no-scores
+  convert_summary_files:
+    convert_summary_files: ''
+  diamond_identify:
+    diamond: -query-fmt seq-ids -subject-fmt seq-ids -output-prefix hits -ofmt seq-align-set
+    diamond_blastp: --sam-query-len --comp-based-stats 1 --evalue 0.0001 --very-sensitive
+      --masking 1 --unal 0
+  diamond_orthology:
+    diamond: -ofmt seq-align-set -query-fmt seq-ids -subject-fmt seq-ids -output-prefix
+      hits
+    diamond_blastp: --sam-query-len --very-sensitive --unal 0 --max-target-seqs 100
+      --comp-based-stats 0 --masking 0
+  extract_products_from_models:
+    extract_products: ''
+  filter_est_align:
+    align_filter: -filter '((matches >= 100 && splices > 0) || (matches >= 250 &&
+      splices == 0)) && product_coverage >= 0.35 && exon_identity >= 0.85 && consensus_splices
+      >= MUL(SUB(exon_count,1),2) && ((max_intron_len < 200000 && (pct_identity_ungap
+      < 98 || pct_coverage < 90)) || max_intron_len < 1300000) && SUB(subject_end,subject_start)<5000000
+      && rank == 1'
+    align_sort: -k subject,subject_start,-subject_end,subject_strand,query,query_start,-query_end,query_strand,-num_ident,gap_count
+  final_asn_markup:
+    final_asn: -annot-provider 'GenBank submitter' -annot-pipeline 'NCBI EGAPx' -annot-software-version
+      0.4.0-alpha -annot-name GB_2025_07_15 -annot-date 07/15/2025
+  find_orthologs:
+    find_orthologs: ''
+  gc_makeblastdb:
+    gc_makeblastdb: ''
+  generate_fasta_from_annots:
+    gnomon_asn2fasta: -it -one-per-gene -primary-only -separate-by-unit
+  get_hmm_params:
+    get_hmm_params: ''
+  getfasta:
+    getfasta: -u full-assembly -bare-accession -use-reference-non-nuclear
+  gnomon_add_filtering_scores:
+    gnomon_filter_models: ''
+  gnomon_biotype:
+    gnomon_biotype: ''
+  gnomon_evidence_summary:
+    gnomon_evidence_summary: ''
+  gnomon_training:
+    gnomon_training: -asn -b
+  gnomon_wnode:
+    annot_wnode: -margin 1000 -mincont 1000 -minlen 225 -mpp 10.0 -ncsp 25 -window
+      200000 -nonconsens -open
+    generic_action_node: -app annot_wnode
+    gpx_qdump: -slices-for affinity -sort-by affinity -unzip '*'
+    gpx_qsubmit: ''
+  locus_link:
+    locus_type: ''
+  locus_track:
+    locus_track: ''
+  make_winmask_stats:
+    make_winmask_stats: -infmt seqids -sformat obinary -smem 1024
+  minimap2_index:
+    minimap2_index: -k 15 -w 5
+  minimap2_wnode:
+    gpx_qsubmit: -batch-size 5000 -max-execs 100
+    minimap2-params: -x splice --eqx --MD --cs -Y --sam-hit-only -M 0.9 -p 0.1 -N
+      25
+    minimap2_wnode: -est_colocation_weight 0 -min-entropy 0.65 -workers 1 -generate-stats
+      -output_one_orientation_only -trust_input_collation -with-best-placement
+  miniprot:
+    miniprot: -t 31 -p 0.4 --outs=0.4
+    split_proteins: -n 25000
+  paf2asn:
+    paf2asn: -prosplign-refinement
+  prepare_masks:
+    combine_blast_db: -blast-algo-program 100 -blast-algo-options 'GPIPE&windowmasker%20%2B%20Ribosomal%20RNA&&'
+    combine_blast_db_hardmask: -blast-algo-program 100 -blast-algo-options 'GPIPE&NCBI%2DGPipe%2DHardmask&&Foreign%20Contamination'
+    combine_blast_db_softmask: -blast-algo-program 100 -blast-algo-options 'GPIPE&NCBI%2DGPipe%2DSoftmask&&Foreign%20Contamination'
+    convert_mask: -ifmt contaminant-mask -ofmt blast-mask -types rRNA -exclude-pseudo
+      -blast-algo-options 'GPIPE&Ribosomal%20RNA&&'
+    convert_mask_hardmask: -ifmt blast-mask -ofmt ftable -name 'NCBI-GPipe-Hardmask'
+    convert_mask_softmask: -ifmt blast-mask -ofmt ftable -name 'NCBI-GPipe-Softmask'
+  prot_gnomon_prepare:
+    prot_gnomon_prepare: ''
+  rnaseq_collapse:
+    gpx_make_outputs: -default-output-name align -slices-for affinity -sort-by job-id
+      -unzip align
+    gpx_qsubmit: -affinity subject
+    rnaseq_collapse: -backlog 1 -max-jobs 1 -support-non-sra
+    rnaseq_collapse_create_jobs: -alignments-per-job 50000 -min-range 100000
+  setup:
+    convert_genome: force-local-ids
+    convert_proteins: force-local-ids
+  sra_qry:
+    sra_query: ''
+  star_index:
+    STAR: --runThreadN 8
+  star_wnode:
+    star-params: --alignSJoverhangMin 8 --outFilterMultimapNmax 200 --outFilterMismatchNmax
+      50 --genomeLoad NoSharedMemory --outSAMtype SAM --outSAMattributes 'NH HI AS
+      nM NM MD jM jI XS MC' --outSAMprimaryFlag AllBestScore --outFilterMultimapScoreRange
+      50 --seedSearchStartLmax 15 --limitOutSAMoneReadBytes 1000000 --outSJtype None
+    star_wnode: -preserve-star-logs
+  winmask_wnode:
+    gpx_make_outputs: -unzip '*'
+    gpx_qsubmit: -batch-size 1
+    winmasker_wnode: ''

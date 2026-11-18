@@ -1,0 +1,176 @@
+"""MALDI-MSI processing pipeline (new-format CSV, per-sample).
+
+Usage:
+    uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/local    # local
+    uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/slurm    # SLURM
+    uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake -n                                         # dry run
+"""
+
+configfile: "config.yaml"
+
+SAMPLES = {s["id"]: s for s in config["samples"]}
+SAMPLE_IDS = list(SAMPLES.keys())
+MAPPING = config["mapping_csv"]
+
+
+rule all:
+    input:
+        expand("data/aligned_{sample}.h5ad", sample=SAMPLE_IDS),
+        expand("data/volume_{sample}.zarr", sample=SAMPLE_IDS),
+        expand("figures/alignment_{sample}/aligned_overlay.png", sample=SAMPLE_IDS),
+        expand("figures/qc_{sample}/qc_tic_spots.png", sample=SAMPLE_IDS),
+
+
+# ---------------------------------------------------------------------------
+# Phase 1: Ingest (wide CSV → per-region h5ad)
+# ---------------------------------------------------------------------------
+rule ingest_csv:
+    input:
+        csv=lambda wc: SAMPLES[wc.sample]["csv"],
+        mapping=MAPPING,
+    output:
+        directory("data/slices_{sample}"),
+    params:
+        sample_id=lambda wc: wc.sample,
+        label=lambda wc: SAMPLES[wc.sample]["label"],
+        chunksize=config.get("ingest_chunksize", 20000),
+    resources:
+        mem_mb=64000,
+        runtime=180,
+    shell:
+        """
+        ../../.venv/bin/python maldi_ingest.py from-csv \
+            --csv {input.csv} \
+            --sample-id {params.sample_id} \
+            --label {params.label} \
+            --out-dir {output} \
+            --mapping {input.mapping} \
+            --chunksize {params.chunksize}
+        """
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: QC + preprocessing
+# ---------------------------------------------------------------------------
+rule preprocess:
+    input:
+        "data/slices_{sample}",
+    output:
+        directory("data/processed_{sample}"),
+    params:
+        normalization=config.get("normalization", "tic"),
+        nan_strategy=config.get("nan_strategy", "zero"),
+        tic_min_quantile=config.get("tic_min_quantile", 0.01),
+    resources:
+        mem_mb=32000,
+        runtime=60,
+    shell:
+        """
+        ../../.venv/bin/python maldi_qc.py preprocess \
+            --slice-dir {input} \
+            --out-dir {output} \
+            --normalization {params.normalization} \
+            --nan-strategy {params.nan_strategy} \
+            --tic-min-quantile {params.tic_min_quantile}
+        """
+
+
+rule plot_raw:
+    input:
+        "data/slices_{sample}",
+    output:
+        directory("figures/raw_{sample}"),
+    resources:
+        mem_mb=8000,
+        runtime=30,
+    shell:
+        """
+        ../../.venv/bin/python maldi_qc.py plot-raw \
+            --slice-dir {input} \
+            --fig-dir {output}
+        """
+
+
+rule plot_qc:
+    input:
+        "data/processed_{sample}",
+    output:
+        "figures/qc_{sample}/qc_tic_spots.png",
+        "figures/qc_{sample}/qc_feature_corr.png",
+    resources:
+        mem_mb=16000,
+        runtime=30,
+    shell:
+        """
+        ../../.venv/bin/python maldi_qc.py plot-qc \
+            --slice-dir {input} \
+            --fig-dir figures/qc_{wildcards.sample}
+        """
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: Alignment (PASTE3, per sample)
+# ---------------------------------------------------------------------------
+rule align:
+    input:
+        "data/processed_{sample}",
+    output:
+        "data/aligned_{sample}.h5ad",
+    params:
+        method=config.get("paste3_method", "both"),
+        max_iter=config.get("paste3_max_iter", 100000000),
+        seed=config.get("center_align_seed", 5),
+    resources:
+        # center_align scales with n_slices × n_spots. Both queen (40 slices,
+        # 533k spots) and worker (38, 368k) need ~384 GB; smaller samples can
+        # use less, but a single setting avoids OOMs.
+        mem_mb=384000,
+        runtime=1440,
+    threads: 4
+    shell:
+        """
+        PASTE3_WORKERS=4 ../../.venv/bin/python maldi_alignment.py align \
+            --slice-dir {input} \
+            --out {output} \
+            --method {params.method} \
+            --max-iter {params.max_iter} \
+            --seed {params.seed}
+        """
+
+
+rule plot_align:
+    input:
+        "data/aligned_{sample}.h5ad",
+    output:
+        "figures/alignment_{sample}/aligned_overlay.png",
+    resources:
+        mem_mb=16000,
+        runtime=30,
+    shell:
+        """
+        ../../.venv/bin/python maldi_alignment.py plot-align \
+            --aligned {input} \
+            --fig-dir figures/alignment_{wildcards.sample}
+        """
+
+
+# ---------------------------------------------------------------------------
+# Phase 4: Voxelization
+# ---------------------------------------------------------------------------
+rule voxelize:
+    input:
+        "data/aligned_{sample}.h5ad",
+    output:
+        directory("data/volume_{sample}.zarr"),
+    params:
+        voxel_size=config.get("voxel_size_um", 20),
+    resources:
+        mem_mb=32000,
+        runtime=60,
+    shell:
+        """
+        ../../.venv/bin/python maldi_alignment.py voxelize \
+            --aligned {input} \
+            --out {output} \
+            --voxel-size {params.voxel_size}
+        """

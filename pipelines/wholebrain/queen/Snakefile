@@ -1,0 +1,10 @@
+# Whole-brain Xenium pipeline, brain 1 (queen). The rules are shared with the
+# worker brain and live in ../wholebrain.smk; everything specific to
+# this brain is in config.yaml. Run from this directory (usage in that file).
+
+configfile: "config.yaml"
+
+include: "../wholebrain.smk"
+
+rule all:
+    input: TARGETS

@@ -1,0 +1,22 @@
+# Shared SLURM profile for all BIMP-ST pipelines
+# Usage: snakemake --profile ../../config/profiles/slurm
+#
+# Per-rule resources are specified in each Snakefile.
+# This profile only sets executor defaults and fallbacks.
+executor: slurm
+jobs: 100
+latency-wait: 60
+local-cores: 1
+rerun-incomplete: true
+# Rerun only on mtime (a newer input, or a missing output). Snakemake's other
+# triggers (code, params, input set, software env) would schedule a rebuild of
+# a canonical object (aligned_clustered.h5ad, combined_clustered.h5ad) after
+# any edit to a rule's shell line, and several of those rebuilds are stochastic
+# GPU jobs every downstream number depends on. To rebuild on purpose, delete
+# or touch the input, or use --forcerun <rule>.
+rerun-triggers: mtime
+
+default-resources:
+  mem_mb: 64000
+  runtime: 120
+  cpus_per_task: 4

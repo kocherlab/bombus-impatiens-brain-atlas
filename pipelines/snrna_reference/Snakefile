@@ -1,0 +1,202 @@
+# snRNA-seq Reference Processing Pipeline
+#
+# DAG:
+#   CellBender h5 / h5ad (per sample)
+#       → preprocess (QC/MAD/Scrublet/combine) → raw.h5ad
+#           → process (normalize/HVG/PCA/Harmony/UMAP/Leiden) → processed.h5ad
+#               ├→ markers (top N per cluster + gene descriptions)
+#               ├→ region_degs (1-vs-rest Wilcoxon) → tau (specificity scores)
+#               └→ composition (cluster proportions across samples)
+#
+# Scripts:
+#   sn_reference.py  — preprocess, process, annotate, markers, inspect
+#   sn_differential.py — region-degs, tau, composition
+#
+# Inputs (config.yaml):
+#   CellBender h5 (default) or pre-QC'd h5ad (format: "h5ad")
+#   h5ad supports subset_key/subset_value filtering and skip_qc: true
+#
+# Usage:
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/slurm    # SLURM production
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake --profile ../../config/profiles/local     # Local testing
+#   uvx --from snakemake --with snakemake-executor-plugin-slurm snakemake -n --profile ../../config/profiles/slurm  # Dry run
+
+import yaml
+from pathlib import Path
+
+configfile: "config.yaml"
+
+_defaults_path = Path(workflow.basedir) / "../../config/snakemake_defaults.yaml"
+if _defaults_path.exists():
+    with open(_defaults_path) as f:
+        _defaults = yaml.safe_load(f)
+    _merged = {**_defaults, **config}
+    config.update(_merged)
+
+shell.prefix("export PATH=$HOME/.local/bin:$PATH UV_LINK_MODE=copy HDF5_USE_FILE_LOCKING=FALSE && ")
+
+WORKDIR = str(Path(workflow.basedir).resolve())
+# Repo root, for PYTHONPATH when calling .venv/bin/python directly instead of
+# `uv run` (which re-syncs the shared venv and drops the --no-deps tangram2
+# install). Referenced as {PROJECT_ROOT} in shell bodies, the same way
+# {WORKDIR} already is.
+PROJECT_ROOT = str(Path(workflow.basedir).resolve().parents[1])
+DATA_DIR = f"{WORKDIR}/data"
+BIMP_LOOKUP = config.get("bimp_lookup", "")
+BATCH_KEY = config.get("batch_key", "sample")
+PCA_N_COMPS = config.get("pca_n_comps", 50)
+HARMONY_N_PCS = config.get("harmony_n_pcs", 20)
+HARMONY_MAX_ITER = config.get("harmony_max_iter", 15)
+LEIDEN_RES = config.get("leiden_resolution", 1.0)
+N_NEIGHBORS = config.get("n_neighbors", 15)
+CELL_TYPE_KEY = config.get("cell_type_key", "leiden")
+FDR = config.get("fdr_threshold", 0.05)
+
+# Collect CellBender h5 input paths from samples config
+SAMPLE_H5S = [info["path"] for info in config.get("samples", {}).values()]
+
+TARGETS = [
+    f"{DATA_DIR}/raw.h5ad",
+    f"{DATA_DIR}/processed.h5ad",
+    f"{DATA_DIR}/markers_{CELL_TYPE_KEY}_top20.csv",
+    f"{DATA_DIR}/region_degs.csv",
+    f"{DATA_DIR}/tau_degs.csv",
+    f"{DATA_DIR}/composition_results",
+]
+
+rule all:
+    input: TARGETS
+
+# =============================================================================
+# PREPROCESS: Load CellBender h5, QC, filter, combine
+# =============================================================================
+rule preprocess:
+    """Load CellBender h5 files, QC (MAD outlier + Scrublet), combine"""
+    input:
+        SAMPLE_H5S
+    output:
+        f"{DATA_DIR}/raw.h5ad"
+    threads: 4
+    resources:
+        mem_mb=64000,
+        runtime=60,
+        cpus_per_task=4
+    shell:
+        """
+        cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python sn_reference.py preprocess \
+            --config-file {WORKDIR}/config.yaml \
+            --n-jobs {threads}
+        """
+
+# =============================================================================
+# PROCESS: Normalize, HVG, PCA, Harmony, UMAP, Leiden
+# =============================================================================
+rule process:
+    """Process snRNA-seq reference: normalize, HVG, PCA, Harmony, cluster"""
+    input:
+        f"{DATA_DIR}/raw.h5ad"
+    output:
+        f"{DATA_DIR}/processed.h5ad"
+    threads: 16
+    resources:
+        mem_mb=64000,
+        runtime=120,
+        cpus_per_task=16
+    shell:
+        """
+        cd {WORKDIR} && NUMBA_NUM_THREADS={threads} PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python sn_reference.py process \
+            --input-file {input} \
+            --batch-key {BATCH_KEY} \
+            --pca-n-comps {PCA_N_COMPS} \
+            --n-pcs {HARMONY_N_PCS} \
+            --harmony-max-iter {HARMONY_MAX_ITER} \
+            --n-neighbors {N_NEIGHBORS} \
+            --resolution {LEIDEN_RES} \
+            --n-jobs {threads}
+        """
+
+# =============================================================================
+# MARKERS: Export top marker genes per cluster
+# =============================================================================
+rule markers:
+    """Export top N marker genes per cluster with descriptions"""
+    input:
+        f"{DATA_DIR}/processed.h5ad"
+    output:
+        f"{DATA_DIR}/markers_{CELL_TYPE_KEY}_top20.csv"
+    threads: 4
+    resources:
+        mem_mb=32000,
+        runtime=30,
+        cpus_per_task=4
+    shell:
+        """
+        cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python sn_reference.py markers \
+            --groupby {CELL_TYPE_KEY} \
+            --n-genes 20
+        """
+
+# =============================================================================
+# REGION_DEGS: 1-vs-rest Wilcoxon per cluster (region comparison)
+# =============================================================================
+rule region_degs:
+    """Wilcoxon 1-vs-rest DEGs per cluster"""
+    input:
+        f"{DATA_DIR}/processed.h5ad"
+    output:
+        f"{DATA_DIR}/region_degs.csv"
+    threads: 4
+    resources:
+        mem_mb=32000,
+        runtime=60,
+        cpus_per_task=4
+    shell:
+        """
+        cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python sn_differential.py region-degs \
+            --cell-type-key {CELL_TYPE_KEY} \
+            --fdr-threshold {FDR}
+        """
+
+# =============================================================================
+# TAU: Specificity scores for region DEGs
+# =============================================================================
+rule tau:
+    """Compute tau specificity scores for region DEGs"""
+    input:
+        h5ad=f"{DATA_DIR}/processed.h5ad",
+        degs=f"{DATA_DIR}/region_degs.csv"
+    output:
+        f"{DATA_DIR}/tau_degs.csv"
+    threads: 4
+    resources:
+        mem_mb=32000,
+        runtime=60,
+        cpus_per_task=4
+    shell:
+        """
+        cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python sn_differential.py tau \
+            --cell-type-key {CELL_TYPE_KEY} \
+            --deg-file region_degs \
+            --fdr-threshold {FDR}
+        """
+
+# =============================================================================
+# COMPOSITION: Cluster composition across samples
+# =============================================================================
+rule composition:
+    """Cluster composition analysis across samples"""
+    input:
+        f"{DATA_DIR}/processed.h5ad"
+    output:
+        directory(f"{DATA_DIR}/composition_results")
+    threads: 4
+    resources:
+        mem_mb=32000,
+        runtime=30,
+        cpus_per_task=4
+    shell:
+        """
+        cd {WORKDIR} && PYTHONPATH={PROJECT_ROOT}/src ../../.venv/bin/python sn_differential.py composition \
+            --cell-type-key {CELL_TYPE_KEY} \
+            --sample-key {BATCH_KEY}
+        """

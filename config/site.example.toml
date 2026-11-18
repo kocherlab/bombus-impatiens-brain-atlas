@@ -1,0 +1,54 @@
+# Site configuration template: copy to config/site.toml (gitignored) or to
+# ~/.config/bimp-st/site.toml (shared by every checkout of one user), or set
+# the matching BIMP_<KEY> environment variable. Read by src/bimp_st/site.py;
+# `python -m bimp_st.site <key>` prints the resolved value.
+#
+# Only the scripts that rebuild inputs from raw or author-held data need these.
+# Regenerating the figures and numbers from the deposited atlas objects needs
+# none of them: data_repo defaults to this checkout.
+
+# Checkout whose data/ and pipelines/*/data/ hold the atlas inputs. Default:
+# this checkout. Set it when working from a second checkout that shares
+# results/ but not data/.
+# data_repo = "/path/to/bimp-st"
+
+# snRNA-seq analysis tree: out/cellbender, out/aligned (Cell Ranger),
+# out/clustering_and_annotation (cNMF), src/scripts/03_analysis (notebook code).
+# snrna_source = "/path/to/snrna_analysis"
+
+# Shared snRNA-seq helper scripts (go-basic.obo).
+# snrna_shared_scripts = "/path/to/integrated_analyses/src/scripts"
+
+# BIMP v4 reference genome directory: genome/BIMP_genome_v4.fasta,
+# genome/BIMP_OGS_v4.3.gtf.
+# genome_dir = "/path/to/reference_genome"
+
+# BIMP v4.3 genome release (BIMP_OGS_v4.3.gff).
+# genome_release = "/path/to/BIMP_v4.3"
+
+# Reference genome assemblies the deposit staging copies (scripts/deposit/).
+# genomes_dir = "/path/to/genomes"
+
+# Raw MALDI-MSI imzML exports (Princeton_imzmls/).
+# maldi_raw = "/path/to/maldi/data"
+
+# Where scripts/deposit/ builds the public data deposit.
+# deposit_staging = "/path/to/deposit_staging"
+
+# SMRT Link Iso-Seq run directory (Isoseq_analysis_13887/flnc-<i>.bam, reports).
+# isoseq_raw = "/path/to/isoseq_run"
+
+# Conda environment with BUSCO 6.1.0 (scripts/gene_annotation/run_genome_busco.sh).
+# busco_env = "/path/to/busco_env"
+
+# Environment built from config/envs/busco.yml, and the BUSCO lineage download
+# directory (scripts/gene_annotation/run_annotation_busco.sh).
+# busco6_env = "/path/to/busco6"
+# busco_downloads = "/path/to/busco_downloads"
+
+# Deposit metadata the authors confirm (values, not paths; no defaults):
+# number of bees in each snRNA-seq sample, and the sequencing instrument model,
+# instrument ID and flowcell of the snRNA-seq libraries. scripts/deposit/
+# build_staging.py stops with an error naming the key while either is unset.
+# snrna_individuals_per_sample = "<n>"
+# snrna_instrument = "<model>, instrument <id>, flowcell <id>"

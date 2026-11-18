@@ -1,0 +1,24 @@
+# Cluster -> cell type mapping
+# Edit after inspecting marker genes from `PYTHONPATH=../../src ../../.venv/bin/python sn_reference.py markers`
+#
+# Format:
+#   <leiden_cluster_id>: <cell_type_name>
+#
+# Example:
+#   "0": "Kenyon cells"
+#   "1": "Projection neurons"
+#   "2": "Optic lobe neurons"
+#   "3": "Glia"
+#
+# After editing, run:
+#   PYTHONPATH=../../src ../../.venv/bin/python sn_reference.py annotate
+#
+# Optionally add a "major_types" section to group subtypes:
+#   major_types:
+#     Neurons: ["Kenyon cells", "Projection neurons", "Optic lobe neurons"]
+#     Glia: ["Astrocyte-like glia", "Perineurial glia"]
+#     Hemocytes: ["Hemocytes"]
+
+cluster_to_cell_type: {}
+
+major_types: {}

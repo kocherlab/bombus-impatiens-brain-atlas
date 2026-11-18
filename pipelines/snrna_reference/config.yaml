@@ -1,0 +1,56 @@
+# snRNA-seq reference processing pipeline
+# Inherits snrna_ref from ../../config/snakemake_defaults.yaml
+
+# --- Sample inputs ---
+# Each sample: path to CellBender h5 or pre-QC'd h5ad + metadata
+# For h5ad sources: set format: "h5ad" and optionally subset_key/subset_value
+# to extract a subset (e.g. queen cells from combined qw file).
+# h5ad samples with skip_qc: true bypass MAD/Scrublet filtering.
+samples:
+  ieg_control:
+    path: "../../data/sn/raw_cellbender/ieg_tracking/BIMP_Worker_IEG_Control_CellbenderOut_filtered.h5"
+    caste: "worker"
+    experiment: "ieg_tracking"
+    condition: "control"
+  ieg_treatment:
+    path: "../../data/sn/raw_cellbender/ieg_tracking/BIMP_Worker_IEG_Treatment_CellbenderOut_filtered.h5"
+    caste: "worker"
+    experiment: "ieg_tracking"
+    condition: "treatment"
+  worker_oneplex:
+    path: "../../data/sn/raw_cellbender/worker_oneplex/Worker_OnePlex_CellbenderOut_filtered.h5"
+    caste: "worker"
+    experiment: "worker_oneplex"
+  # 2023 multiome reanalysis (re-aligned to v4.3 genome, CellBender filtered)
+  queen_multi:
+    path: "../../data/sn/raw_cellbender/multiome_2023/BIMPQueen_MultiomeGEX_CellbenderOut_filtered.h5"
+    caste: "queen"
+    experiment: "multiome_2023"
+  worker_multi:
+    path: "../../data/sn/raw_cellbender/multiome_2023/BIMPWorker_MultiomeGEX_CellbenderOut_filtered.h5"
+    caste: "worker"
+    experiment: "multiome_2023"
+
+# --- QC parameters (matched to the integrated snRNA-seq notebook) ---
+qc_min_genes: 200
+qc_min_cells: 3
+qc_nmads: 5
+qc_max_counts: 15000
+qc_mt_pct: 5.0
+qc_doublet_score_max: 0.2
+
+# --- Processing (matched to the same notebook) ---
+bimp_lookup: "../combined_atlas/data/BIMP_v4.3_lookup.tsv"
+batch_key: "sample"
+pca_n_comps: 50
+harmony_n_pcs: 20
+harmony_max_iter: 15
+# Leiden resolution matched to the notebook's checkpoint leiden_res0_40 (18 clusters).
+# Rebuilding downstream Tangram + MAJORITY_VOTE_MAP is required after changes.
+leiden_resolution: 0.4
+n_neighbors: 15
+caste_key: "caste"
+cell_type_key: "leiden"    # Change to "cell_type" after annotate step
+pseudobulk_min_cells: 10
+pseudobulk_min_counts: 1000
+fdr_threshold: 0.05

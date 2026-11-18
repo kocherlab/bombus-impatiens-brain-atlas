@@ -1,0 +1,4 @@
+queen_dir: "../wholebrain/queen"
+worker_dir: "../wholebrain/worker"
+clustering:
+  threads: 32

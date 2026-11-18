@@ -1,0 +1,17 @@
+# Shared defaults for BIMP-ST Snakemake pipelines.
+# Per-pipeline config.yaml values override these.
+
+# Canonical snRNA reference: the annotated CB+OL atlas, concatenated
+# (join=inner, 73,463 nuclei x 10,469 genes; region-namespaced leiden + `region`
+# col + hand `cell_type`). Built by scripts/atlas/build_snrna_reference.py.
+# The region-specific singles below feed the CB/OL-separate Tangram runs.
+snrna_ref: "../../data/sn/BIMP_atlas_qw_combined.h5ad"
+snrna_ref_cb: "../../data/sn/BIMP_atlas_qw_CentralBrain.h5ad"
+snrna_ref_ol: "../../data/sn/BIMP_atlas_qw_OpticLobe.h5ad"
+
+# Obs column in snrna_ref to use as the Tangram cluster label.
+# The CB/OL atlas ships hand annotations in `cell_type`, used directly.
+cluster_label: "cell_type"
+
+# "paste3" (default) or "mosaicfield" (experimental, --config aligner=mosaicfield)
+aligner: "paste3"

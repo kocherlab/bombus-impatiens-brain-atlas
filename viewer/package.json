@@ -1,0 +1,12 @@
+{
+  "name": "bimp-3d-webviz",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Self-contained WebGL2 3D viewer of the Bombus impatiens spatial-transcriptomics brain atlas",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node test/run.mjs --build",
+    "shots": "node test/shots.mjs --build"
+  }
+}
