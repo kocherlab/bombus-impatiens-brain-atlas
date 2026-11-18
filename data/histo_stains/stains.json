@@ -1,0 +1,424 @@
+{
+ "stains": [
+  {
+   "key": "dapi",
+   "label": "DAPI (nuclei)",
+   "path": "{caste}/{ii}.webp",
+   "small": "{caste}/{ii}-s.webp"
+  },
+  {
+   "key": "boundary",
+   "label": "Boundary (ATP1A1/CD45/E-cad)",
+   "path": "{caste}/{ii}-boundary.webp",
+   "small": "{caste}/{ii}-boundary-s.webp"
+  },
+  {
+   "key": "rna18s",
+   "label": "18S rRNA",
+   "path": "{caste}/{ii}-rna18s.webp",
+   "small": "{caste}/{ii}-rna18s-s.webp"
+  },
+  {
+   "key": "smavim",
+   "label": "Interior (αSMA/vimentin)",
+   "path": "{caste}/{ii}-smavim.webp",
+   "small": "{caste}/{ii}-smavim-s.webp"
+  }
+ ],
+ "sections": {
+  "queen": {
+   "0": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "1": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "2": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "3": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "4": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "5": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "6": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "7": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "8": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "9": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "10": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "11": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "12": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "13": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "14": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "15": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "16": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "17": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "18": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "19": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "20": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "21": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "22": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "23": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "24": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "25": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "26": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "27": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "28": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "29": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ]
+  },
+  "worker": {
+   "0": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "1": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "2": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "3": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "4": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "5": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "6": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "7": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "8": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "9": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "10": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "11": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "12": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "13": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "14": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "15": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "16": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "17": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "18": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "19": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "20": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "21": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "22": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "23": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "24": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "25": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "26": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "27": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "28": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "29": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "30": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "31": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "32": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "33": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ],
+   "34": [
+    "dapi",
+    "boundary",
+    "rna18s",
+    "smavim"
+   ]
+  }
+ }
+}

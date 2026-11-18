@@ -1,0 +1,15 @@
+{
+  "name": "Bombus impatiens brain atlas",
+  "short_name": "Bee brain atlas",
+  "description": "A bumble bee brain, cell by cell: 1,300,192 cells from a queen and a worker of the common eastern bumble bee, in 3D.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#f4ecdc",
+  "theme_color": "#f4ecdc",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
